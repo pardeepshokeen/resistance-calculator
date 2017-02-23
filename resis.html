@@ -1,0 +1,376 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+<title> Resistance Calculator  </title>
+<!-- <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script> -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name = "description" content = "Resistance Calculator. Calculate resistance of any series,parallel or complex circuit. Just draw circuit and get the resistance. ">
+
+
+
+
+</head>
+
+<body>
+
+
+<div class = "top_bar">
+
+
+
+ <!-- sharing buttons  -->
+
+
+<div class = "left_content">
+ <!-- main content  -->
+<h2>Online Resistance Calculator </h2>
+<p class="normalText">Online resistance calculator is an tool to calculate the 
+equivalent resistance of any circuit drawn between points A and B</p>
+
+<div class = "paper">
+<p id = "displayMessage"></p>
+<div id = "svgId">
+<svg id = "circuitSvg" height ="400" width = "500"></svg>
+
+<div id = "resistanceButtons">
+<button onclick="pointClicked(1)"> 1 </button>
+<button onclick="pointClicked(2)"> 2 </button>
+<button onclick="pointClicked(3)"> 3 </button>
+<button onclick="pointClicked(4)"> 4 </button>
+<button onclick="pointClicked(5)"> 5 </button>
+<button onclick="pointClicked(6)"> 6 </button>
+<button onclick="pointClicked(7)"> 7 </button>
+<button onclick="pointClicked(8)"> 8 </button>
+<button onclick="pointClicked(9)"> 9 </button>
+<span id = "r1">Select Resistance</span>
+
+</div>
+
+<br> 
+<button onclick="location.reload()"> RESET </button>
+<button onclick="calculate()"> CALCULATE </button>
+<p> Resultant Resistance of your circuit is: <span id = "result"> </span></p>
+</div>
+<br><br>
+</div>
+
+<div id = "how-to-use-calculator" class = "paper">
+  <h3> How to use online resistance calculator </h3>
+  <p> The Resistance Calculator finds the equivalent resistance between
+   point "A" and "B". Hence, draw your circuit between A and B.</p>
+   <h4> Steps to draw circuit </h4>
+  <ol class = "normalText">
+  <li> Select a point(blue dots). Doing this will hide the selected dot. </li>
+  <li> Now select the other dot between which you want to place the resistance.</li>
+     This will display the resistance box 
+  <li> Select resistance from resistance box (from 1-9) </li>
+  <li> Great. You have added a resistance. Now complete the circuit between A and B </li>
+  <li> Click Calculate to calculate the equivalent resistance </li>
+  <li class = "warning"> Clicking on RESET will reset the whole circuit </li>
+
+  </ol>
+</div>
+
+
+
+
+
+ <!-- main content ends -->
+</div>
+
+
+
+
+
+
+
+
+
+ 
+
+</body>
+
+<style>
+svg{ border: 2px solid red; }
+#svgId{text-align: center;}
+#result{
+  display: block;
+  width: 100%;
+  font-size: 2em;
+  color:green;
+  
+}
+#displayMessage{
+  color:red;
+}
+#resistanceButtons{
+  border: 4px solid green;
+  padding:10px;
+}
+
+
+</style>
+
+
+<script>
+var svg = document.getElementById("circuitSvg");
+var buttons = document.getElementById("resistanceButtons");
+var ckl = document.getElementsByName("ckl");
+var displayMessage = document.getElementById("displayMessage");
+displayMessage.innerHTML = "Select FIRST (1) end of Resistance";
+var step =1;
+var mat1 = [12];
+for(var i=0; i<12; i++)
+  mat1[i] = [12];
+var mat2 = [12];
+for(var i=0; i<12; i++)
+  mat2[i] = [12];
+for(var i=0; i<12; i++)
+    for(var j=0; j<12; j++)
+      mat1[i][j] =0;
+    for(var i=0; i<12; i++)
+    for(var j=0; j<12; j++)
+      mat2[i][j] =0;
+
+var point1; 
+var point2;
+var resistance;
+ var usedPoints  = [12];
+ for(var i=0; i<12; i++)
+      usedPoints[i] = 0;  
+
+
+buttons.style.visibility = "hidden";
+
+function pointClicked(data){
+  if(step==1){
+
+    
+     buttons.style.visibility = "hidden";
+    step=2;
+    point1 = data; 
+    displayMessage.innerHTML = "Select SECOND (2) end of Resistance";
+    ckl[data].style.visibility = "hidden";
+  }else if(step==2){
+    if(point1==data)
+       return ;
+    for(var i=0; i<12; i++)
+       ckl[i].style.visibility = "visible";
+       svg.style.opacity = 0.1; 
+     
+    buttons.style.visibility = "visible";
+    step=3;
+    point2 = data;
+    displayMessage.innerHTML = "Select Resistance from Resistance Box";
+  }else{
+
+    step = 1; 
+    displayMessage.innerHTML = "Select FIRST (1) end of Resistance";
+    mat1[point1][point2] = -1/data;
+    mat1[point2][point1] = -1/data;
+    
+    drawResistance(mat1);
+    svg.style.opacity = 1;
+    buttons.style.visibility = "hidden";
+  }
+//console.log(mat1);
+}
+
+function reset(){
+ location.relaod();
+}
+
+function drawLine(i,j){
+  var t = document.getElementsByName("ckl"); 
+  var x1 = t[i].getAttribute("cx");
+  var y1 = t[i].getAttribute("cy");
+  var x2 = t[j].getAttribute("cx");
+  var y2 = t[j].getAttribute("cy");
+  var string = "<line x1 = '"+x1+"' y1 = '"+y1+"' x2 = '"+x2+"' y2 = '"+y2+"' style ='stroke:black'/>"
+  svg.innerHTML += string; 
+  var number = -1/mat1[i][j];
+
+  string = "<text x = '"+(x1/2 + x2/2)+"' y = '"+(y1/2+y2/2)+"'>"+number.toFixed()+"</text>";
+  
+  svg.innerHTML+=string;
+}
+
+function drawResistance(mat){
+  for(var k=0; k<12; k++)
+      usedPoints[i] = 0; 
+   for(var i=0; i<12; i++){
+    for(var j=0; j<12; j++){
+        if(mat[i][j]){
+          drawLine(i,j);
+          usedPoints[i] = 1; 
+        }
+
+    }
+   }
+
+//console.log(usedPoints);
+
+}
+
+
+function drawPoints(){
+  var temp = 0;
+  for(var i=0; i<3; i++){
+    for(var j=0; j<4; j++){
+      svg.innerHTML += "<circle name = 'ckl' r='10' stroke='green' fill='blue' onclick = 'pointClicked("+temp+")'>";
+      document.getElementsByName("ckl")[temp].setAttribute("cy",i*100 + 50);
+      document.getElementsByName("ckl")[temp].setAttribute("cx",j*100 + 50);
+      temp++;
+      //console.log(temp);
+      svg.innerHTML += "<text x = '20' y='50'> A </text>";
+      svg.innerHTML += "<text x = '370' y='255'> B </text>";
+
+
+    }
+  }
+}
+drawPoints();
+
+// for determinant 
+function det(n,mat){
+  
+ var subi, subj, d=0; 
+ var submat = [];
+ for(var k=0; k<n; k++)
+    submat[k] = [];
+  
+
+if(n==2)
+ return( (mat[0][0]*mat[1][1])-(mat[1][0]*mat[0][1]));
+else
+{  for(var c=0;c<n;c++)
+   {  subi=0;   //submatrix's i value
+      for(var i=1;i<n;i++)
+          {  subj=0;
+             for(var j=0;j<n;j++)
+                    {if(j==c)
+                      continue;
+                     submat[subi][subj]=mat[i][j];
+                     subj++;
+                     }
+              subi++;
+    
+            }
+      d=d+(Math.pow(-1,c)*mat[0][c]*det(n-1 ,submat));
+            //console.log(d);
+            //console.log("determinant");
+    }
+}
+return d;
+};
+
+
+//
+
+function calculate(){
+ var mat = [];
+
+
+
+  for(var i=0; i<12; i++){
+    temp1=0; 
+    for(var j=0; j<12; j++)
+       temp1 = temp1 + mat1[i][j];
+     mat1[i][i] = -temp1;
+  }
+
+ // console.log(mat1);
+
+temp1=0;
+
+for(var i=0; i<12; i++)
+   if(usedPoints[i])
+      temp1++;
+
+
+    for(var i=0; i<temp1; i++)
+       mat[i] = [];
+
+
+var a=0, b=0; 
+for(var i=0; i<12; i++){
+  if(usedPoints[i]){
+
+    for(var j=0; j<12; j++){
+
+         if(usedPoints[j]){
+                mat[a][b] = mat1[i][j];
+               // console.log("transferred"+i+","+j+ "to"+a+","+b+"="+mat1[i][j]);
+                b++;
+         }
+
+
+    }
+    a++; 
+    b=0;
+}
+
+}
+
+//console.log(mat);
+var d1 = det(temp1-1,mat);
+//console.log(d1);
+var temp2=0; 
+
+
+
+
+
+
+ for(var i=0; i<temp1; i++){
+    mat[i][temp2] = 0;
+ }
+ mat[temp2][temp2] = 1;
+ //console.log(mat);
+ //console.log(d2); 
+ var d2 = det(temp1-1, mat);
+ //console.log(d2/d1);
+
+ var number = d2/d1;
+     document.getElementById("result").innerHTML = number.toFixed(2) +" Ohm";
+    buttons.style.visibility = "hidden";
+
+
+
+}
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
+
+
