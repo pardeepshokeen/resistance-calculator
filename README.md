@@ -1,5 +1,7 @@
 # resistance-calculator
 calculate resistance of any circuit 
+<img src = "resistance-calculator/Screenshot from 2017-02-23 19-43-14.png">
+
 
  <h3> How to use online resistance calculator </h3>
   <p> The Resistance Calculator finds the equivalent resistance between
@@ -15,3 +17,5 @@ calculate resistance of any circuit
   <li> Clicking on RESET will reset the whole circuit </li>
 
   </ol>
+  
+  
