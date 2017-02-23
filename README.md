@@ -1,6 +1,6 @@
 # resistance-calculator
 calculate resistance of any circuit 
-<img src = "resistance-calculator/Screenshot from 2017-02-23 19-43-14.png">
+<img src = "https://github.com/pardeepshokeen/resistance-calculator/blob/master/Screenshot%20from%202017-02-23%2019-43-14.png?raw=true">
 
 
  <h3> How to use online resistance calculator </h3>
